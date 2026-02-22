@@ -836,3 +836,5 @@ node deploy/upload-uspto-docs.js <PINECONE_KEY> uspto-data
 - **Model Context Protocol:** https://modelcontextprotocol.io/
 - **Pinecone Pricing:** https://docs.pinecone.io/guides/assistant/pricing-and-limits
 - **VersionRAG Paper:** https://arxiv.org/abs/2510.08109 *(inspiration for diff-indexed approach)*
+- **Matt Williams — Embedding Prefixing:** https://www.youtube.com/watch?v=76EIC_RaDNw&list=PLvsHpqLkpw0fIT-WbjY-xBRxTftjwiTLB *(prefixing can improve RAG results by up to 2x)*
+- **The AI Automators — Context Expansion:** https://www.youtube.com/watch?v=y72TrpffdSk *(fetch_chunks context expansion patterns)*
