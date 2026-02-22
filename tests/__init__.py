@@ -1,0 +1,1 @@
+"""Test package for USPTO Pinecone Assistant MCP."""

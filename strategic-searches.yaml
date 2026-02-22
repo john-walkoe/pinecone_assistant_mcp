@@ -1,0 +1,349 @@
+# Strategic Multi-Search Configuration (Domain-Based Structure)
+# Organized by legal issue domains for focused patent law research
+
+# Domain: Section 101 Patent Eligibility
+section_101_eligibility:
+  description: "Alice/Mayo framework for patent eligibility analysis"
+  searches:
+    - name: "alice_mayo_framework"
+      query: "Section 101 Alice Mayo two-step framework abstract idea"
+      description: "Two-step Alice/Mayo eligibility analysis"
+      enabled: true
+
+    - name: "technological_improvement"
+      query: "Section 101 practical application technological improvement {key_terms}"
+      description: "Technological improvement vs abstract idea"
+      enabled: true
+
+    - name: "inventive_concept"
+      query: "Section 101 inventive concept significantly more Alice step two"
+      description: "Inventive concept analysis (Alice Step 2)"
+      enabled: true
+
+    - name: "judicial_exceptions"
+      query: "Section 101 judicial exceptions abstract idea natural phenomenon {key_terms}"
+      description: "Judicial exception categories and precedents"
+      enabled: true
+
+# Domain: Section 103 Obviousness
+section_103_obviousness:
+  description: "KSR and Graham factors for obviousness analysis"
+  searches:
+    - name: "graham_factors"
+      query: "Section 103 Graham factors scope prior art differences POSITA"
+      description: "Graham v. John Deere four-factor framework"
+      enabled: true
+
+    - name: "ksr_rationales"
+      query: "Section 103 KSR motivation to combine obviousness rationales"
+      description: "KSR v. Teleflex motivation to combine (7 rationales)"
+      enabled: true
+
+    - name: "secondary_considerations"
+      query: "Section 103 secondary considerations commercial success teaching away"
+      description: "Secondary considerations of non-obviousness"
+      enabled: true
+
+    - name: "prior_art_combination"
+      query: "Section 103 combination prior art references motivation {key_terms}"
+      description: "Prior art combination analysis"
+      enabled: true
+
+# Domain: Section 112 Specification Requirements
+section_112_requirements:
+  description: "Written description, enablement, and definiteness"
+  searches:
+    - name: "written_description"
+      query: "Section 112 written description possession requirement {key_terms}"
+      description: "Written description requirement (§112(a))"
+      enabled: true
+
+    - name: "enablement"
+      query: "Section 112 enablement undue experimentation Wands factors"
+      description: "Enablement requirement and Wands factors"
+      enabled: true
+
+    - name: "indefiniteness"
+      query: "Section 112 indefiniteness Nautilus reasonable certainty {key_terms}"
+      description: "Indefiniteness under Nautilus standard (§112(b))"
+      enabled: true
+
+    - name: "means_plus_function"
+      query: "Section 112 paragraph f means-plus-function corresponding structure"
+      description: "Means-plus-function claim limitations (§112(f))"
+      enabled: true
+
+# Domain: Section 102 Novelty
+section_102_novelty:
+  description: "Prior art and anticipation analysis"
+  searches:
+    - name: "anticipation_standard"
+      query: "Section 102 anticipation single reference prior art disclosure"
+      description: "Anticipation standard and requirements"
+      enabled: true
+
+    - name: "inherent_disclosure"
+      query: "Section 102 inherent disclosure anticipation {key_terms}"
+      description: "Inherent disclosure in prior art"
+      enabled: true
+
+    - name: "prior_art_dates"
+      query: "Section 102 prior art effective date AIA pre-AIA"
+      description: "Prior art date rules (AIA vs pre-AIA)"
+      enabled: true
+
+# Domain: Claim Construction
+claim_construction:
+  description: "Claim interpretation and construction standards"
+  searches:
+    - name: "phillips_standard"
+      query: "claim construction Phillips intrinsic extrinsic evidence"
+      description: "Phillips v. AWH claim construction standard"
+      enabled: true
+
+    - name: "prosecution_history_estoppel"
+      query: "prosecution history estoppel argument-based claim scope {key_terms}"
+      description: "Prosecution history and estoppel"
+      enabled: true
+
+    - name: "functional_claiming"
+      query: "functional claim language 112(f) means-plus-function {key_terms}"
+      description: "Functional claim language interpretation"
+      enabled: true
+
+# Domain: PTAB Procedures
+ptab_procedures:
+  description: "PTAB trial standards and procedures"
+  searches:
+    - name: "ipr_standards"
+      query: "IPR petition institution decision preponderance evidence BRI"
+      description: "IPR petition and institution standards"
+      enabled: true
+
+    - name: "claim_construction_ptab"
+      query: "PTAB claim construction broadest reasonable interpretation Phillips"
+      description: "PTAB claim construction standards"
+      enabled: true
+
+    - name: "ptab_estoppel"
+      query: "PTAB estoppel grounds not instituted statutory estoppel"
+      description: "PTAB estoppel rules"
+      enabled: true
+
+# Domain: Mechanical/Manufacturing Patents (Technology-Focused)
+mechanical_patents:
+  description: "Mechanical and manufacturing process patent examination"
+  searches:
+    - name: "mechanical_obviousness"
+      query: "mechanical device patent obviousness design around {key_terms}"
+      description: "Obviousness in mechanical inventions"
+      enabled: true
+
+    - name: "manufacturing_process"
+      query: "manufacturing process method claims {key_terms} patent examination"
+      description: "Manufacturing process patent guidance"
+      enabled: true
+
+# Domain: Software/AI Patents (Technology-Focused)
+software_patents:
+  description: "Software and AI patent eligibility and examination"
+  searches:
+    - name: "software_abstract_idea"
+      query: "software patent 101 abstract idea Alice framework computer-implemented"
+      description: "Software patent eligibility analysis"
+      enabled: true
+
+    - name: "ai_machine_learning"
+      query: "AI machine learning patent practical application {key_terms}"
+      description: "AI/ML patent examination guidance"
+      enabled: true
+
+# Default domain (backward compatibility)
+general_patent_law:
+  description: "General patent law research (backward compatible)"
+  searches:
+    - name: "patent_examination_general"
+      query: "{primary} patent examination MPEP guidance"
+      description: "General examination procedures"
+      enabled: true
+
+    - name: "eligibility_analysis_general"
+      query: "35 USC 101 {primary} subject matter eligibility"
+      description: "General eligibility analysis"
+      enabled: true
+
+    - name: "novelty_analysis_general"
+      query: "35 USC 102 novelty {primary} prior art"
+      description: "General novelty analysis"
+      enabled: true
+
+    - name: "obviousness_analysis_general"
+      query: "35 USC 103 obviousness {primary} Graham factors"
+      description: "General obviousness analysis"
+      enabled: true
+
+    - name: "claim_interpretation_general"
+      query: "patent claim interpretation {key_terms}"
+      description: "General claim construction"
+      enabled: true
+
+# Configuration settings
+settings:
+  default_results_per_search: 10
+  default_domain: "general_patent_law"
+  variable_extraction:
+    key_terms_count: 3
+  variables:
+    primary: "The main subject/technology being researched"
+    key_terms: "First few key terms extracted from primary subject"
+
+# =============================================================================
+# EXAMPLE CONFIGURATIONS FOR OTHER DOCUMENT CORPUSES (COMMENTED OUT)
+# =============================================================================
+# These examples demonstrate how to customize strategic-searches.yaml for
+# different document domains. Uncomment and modify to match your use case.
+# =============================================================================
+
+# # Example: Corporate Law Configuration
+# corporate_law:
+#   description: "Corporate law and securities regulations"
+#   searches:
+#     - name: "delaware_law"
+#       query: "Delaware corporate law {primary} case law precedent"
+#       description: "Search Delaware corporate law and precedents"
+#       enabled: true
+#
+#     - name: "sec_regulations"
+#       query: "SEC regulations {primary} disclosure requirements"
+#       description: "Find relevant Securities and Exchange Commission rules"
+#       enabled: true
+#
+#     - name: "ma_due_diligence"
+#       query: "{primary} merger acquisition due diligence checklist"
+#       description: "Mergers and acquisitions research patterns"
+#       enabled: true
+#
+#     - name: "corporate_governance"
+#       query: "{key_terms} corporate governance fiduciary duty board"
+#       description: "Board governance and fiduciary duty research"
+#       enabled: true
+
+# # Example: Employment Law Configuration
+# employment_law:
+#   description: "Employment and labor law research"
+#   searches:
+#     - name: "title_vii_analysis"
+#       query: "Title VII {primary} employment discrimination EEOC"
+#       description: "Civil rights employment discrimination research"
+#       enabled: true
+#
+#     - name: "nlra_labor_relations"
+#       query: "NLRA {primary} collective bargaining labor relations"
+#       description: "National Labor Relations Act research"
+#       enabled: true
+#
+#     - name: "flsa_wage_hour"
+#       query: "FLSA {primary} wage hour overtime exemption"
+#       description: "Fair Labor Standards Act compliance"
+#       enabled: true
+#
+#     - name: "state_employment_laws"
+#       query: "{key_terms} state employment law wrongful termination"
+#       description: "State-specific employment regulations"
+#       enabled: true
+
+# # Example: Litigation Support Configuration
+# litigation_support:
+#   description: "Civil litigation and procedure research"
+#   searches:
+#     - name: "federal_rules"
+#       query: "FRCP {primary} federal rules civil procedure"
+#       description: "Federal Rules of Civil Procedure analysis"
+#       enabled: true
+#
+#     - name: "evidence_standards"
+#       query: "FRE {primary} evidence admissibility Daubert"
+#       description: "Federal Rules of Evidence research"
+#       enabled: true
+#
+#     - name: "case_strategy"
+#       query: "{primary} litigation strategy case law precedent"
+#       description: "Litigation strategy and tactical research"
+#       enabled: true
+#
+#     - name: "discovery_planning"
+#       query: "{key_terms} discovery ESI electronically stored information"
+#       description: "Discovery rules and best practices"
+#       enabled: true
+
+# # Example: Medical Research Configuration
+# clinical_research:
+#   description: "Clinical guidelines and medical research"
+#   searches:
+#     - name: "clinical_guidelines"
+#       query: "{primary} clinical guidelines treatment protocol"
+#       description: "Search for established clinical practice guidelines"
+#       enabled: true
+#
+#     - name: "fda_regulations"
+#       query: "FDA regulations {primary} medical device approval"
+#       description: "Find relevant FDA regulatory requirements"
+#       enabled: true
+#
+#     - name: "literature_review"
+#       query: "{primary} peer reviewed research clinical studies"
+#       description: "Search peer-reviewed research literature"
+#       enabled: true
+#
+#     - name: "drug_interactions"
+#       query: "{key_terms} drug interactions pharmacology contraindications"
+#       description: "Drug interaction and safety research"
+#       enabled: true
+
+# # Example: Financial Analysis Configuration
+# financial_analysis:
+#   description: "Financial analysis and regulatory compliance"
+#   searches:
+#     - name: "sec_filings"
+#       query: "{primary} 10-K 10-Q financial disclosures"
+#       description: "Search SEC filings and disclosures"
+#       enabled: true
+#
+#     - name: "gaap_standards"
+#       query: "GAAP accounting standards {primary} financial reporting"
+#       description: "Generally Accepted Accounting Principles research"
+#       enabled: true
+#
+#     - name: "industry_analysis"
+#       query: "{primary} industry analysis sector performance trends"
+#       description: "Industry sector analysis and benchmarking"
+#       enabled: true
+#
+#     - name: "risk_assessment"
+#       query: "{key_terms} financial risk assessment regulatory compliance"
+#       description: "Financial risk and compliance analysis"
+#       enabled: true
+
+# # Example: Technical Documentation Configuration
+# technical_documentation:
+#   description: "Software and API documentation research"
+#   searches:
+#     - name: "api_reference"
+#       query: "API {primary} endpoint documentation parameters"
+#       description: "API endpoint and parameter reference"
+#       enabled: true
+#
+#     - name: "authentication_security"
+#       query: "API authentication {primary} security OAuth JWT"
+#       description: "Authentication and security documentation"
+#       enabled: true
+#
+#     - name: "deployment_guides"
+#       query: "{primary} deployment infrastructure configuration"
+#       description: "Infrastructure and deployment configuration"
+#       enabled: true
+#
+#     - name: "troubleshooting"
+#       query: "{key_terms} troubleshooting common issues error codes"
+#       description: "Common issues and troubleshooting guides"
+#       enabled: true
