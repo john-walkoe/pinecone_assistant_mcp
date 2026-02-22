@@ -13,7 +13,7 @@ A **generic** Model Context Protocol (MCP) server for conversational AI document
 
 | Document | Description |
 |----------|-------------|
-| **[📊 Pinecone MCP Comparison](PINECONE_MCP_COMPARISON.md)** | Compare all 4 Pinecone MCP implementations (Official Assistant, Official Vector DB, this repo, pinecone_rag_mcp) |
+| **[📊 Pinecone MCP Comparison](PINECONE_MCP_COMPARISON.md)** | Compare all 5 Pinecone MCP implementations (Official Assistant, Official Vector DB, this repo, pinecone_rag_mcp, pinecone_diff_rag_mcp) |
 | **[📥 Installation Guide](INSTALL.md)** | Complete cross-platform setup with automated scripts |
 | **[🔑 API Key Guide](PINECONE_KEY_GUIDE.md)** | Step-by-step guide to obtaining and securing your Pinecone API key |
 | **[📖 Usage Examples](USAGE_EXAMPLES.md)** | Function examples, workflows, and integration patterns |
