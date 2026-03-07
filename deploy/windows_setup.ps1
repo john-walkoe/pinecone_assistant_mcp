@@ -351,15 +351,49 @@ try {
 Write-Info ""
 Write-Info "Step 6: Pinecone API Key Configuration"
 Write-Info ""
-Write-Info "Get your API key from: https://app.pinecone.io/"
-Write-Info "(API key is stored only in Claude Desktop config - not in system environment variables)"
-Write-Info ""
+
+# Check if a key is already stored (Credential Manager or ~/.pinecone_api_key)
+$existingKeyResult = uv run python -c "
+import sys
+sys.path.insert(0, 'src')
+from config.secure_storage import get_secure_api_key
+key = get_secure_api_key()
+if key and key.startswith('pcsk_'):
+    print('FOUND|' + key)
+else:
+    print('NOT_FOUND|')
+" 2>$null | Out-String
+
+$existingKey = ""
+if ($existingKeyResult -match "FOUND\|(.+)") {
+    $existingKey = $Matches[1].Trim()
+}
+
+if (-not [string]::IsNullOrWhiteSpace($existingKey)) {
+    $maskedKey = if (Get-Command "Hide-ApiKey" -ErrorAction SilentlyContinue) {
+        Hide-ApiKey -ApiKey $existingKey
+    } else {
+        "...$(($existingKey)[-5..-1] -join '') ($($existingKey.Length) chars)"
+    }
+    Write-Host "[OK] Existing Pinecone API key detected: $maskedKey" -ForegroundColor Green
+    $reuseChoice = Read-Host "Use this existing key? (Y/n)"
+    if ([string]::IsNullOrWhiteSpace($reuseChoice) -or $reuseChoice -match '^[Yy]') {
+        $ApiKey = $existingKey
+        $validKey = $true
+        Write-Log "Reusing existing Pinecone API key" "SUCCESS"
+    }
+}
+
+if (-not $validKey) {
+    Write-Info "Get your API key from: https://app.pinecone.io/"
+    Write-Info ""
+}
 
 # Use secure input with validation (3-attempt retry)
 $attemptCount = 0
 $maxAttempts = 3
-$validKey = $false
-$ApiKey = ""
+if (-not [bool]$validKey) { $validKey = $false }
+if ([string]::IsNullOrWhiteSpace($ApiKey)) { $ApiKey = "" }
 
 while (-not $validKey -and $attemptCount -lt $maxAttempts) {
     $attemptCount++

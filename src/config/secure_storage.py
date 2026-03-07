@@ -4,18 +4,18 @@ Unified Secure Storage for Pinecone API Keys
 Architecture:
   - Shared credential across all 3 Pinecone MCPs (assistant, rag, diff_rag)
   - Windows Credential Manager target: "pinecone_API_KEY"
-  - DPAPI file: ~/.pinecone_api_key (bytes 0-31 = entropy, bytes 32+ = encrypted key)
+  - DPAPI file: ~/.pinecone_api_key (blob-only: DPAPI-encrypted key, no embedded entropy)
   - Entropy source: ~/.uspto_internal_auth_secret bytes 0-31 ("first wins" pattern)
   - Linux: ~/.pinecone_api_key plaintext with chmod 600
 
 Security:
   - DPAPI per-user, per-machine encryption (Windows)
   - Cryptographically secure entropy via secrets.token_bytes(32)
-  - Entropy embedded in key file — file is self-contained for decryption
-  - ~/.uspto_internal_auth_secret only needed at write time
+  - Entropy stored separately in ~/.uspto_internal_auth_secret (NTFS ACL protected)
+  - Blob-only format: smallest and fully cross-MCP compatible
   - No hardcoded entropy strings in production paths
 
-See: C:\\Users\\John.WALKOE\\Claude_Documents\\PINECONE_UNIFIED_CREDENTIAL_ARCHITECTURE.md
+See: C:\\Users\\John.WALKOE\\Claude_Documents\\SHARED_DPAPI_ENTROPY_PATTERN.md
 """
 
 import base64
@@ -275,9 +275,9 @@ class SecureStorage:
     Shared across all 3 Pinecone MCPs (pinecone_assistant_mcp, pinecone_rag_mcp,
     pinecone_diff_rag_mcp). All MCPs read/write the same ~/.pinecone_api_key file.
 
-    Windows file format:
-      bytes 0-31: entropy (from ~/.uspto_internal_auth_secret bytes 0-31)
-      bytes 32+:  DPAPI-encrypted API key
+    Windows file format (blob-only):
+      DPAPI-encrypted API key only — no embedded entropy.
+      Entropy always comes from ~/.uspto_internal_auth_secret bytes 0-31.
 
     Linux: ~/.pinecone_api_key plaintext with chmod 600.
     """
@@ -294,7 +294,7 @@ class SecureStorage:
         else:
             self.storage_file = Path(storage_file)
 
-        # entropy_file is always None — entropy is embedded in the key file
+        # entropy_file is always None — entropy comes from ~/.uspto_internal_auth_secret
         # Attribute kept as None for compatibility with any code that inspects it
         self.entropy_file = None
 
@@ -303,7 +303,7 @@ class SecureStorage:
         Store API key securely.
 
         Windows: DPAPI-encrypted with entropy from ~/.uspto_internal_auth_secret,
-                 stored as [entropy 32 bytes] + [encrypted key] in ~/.pinecone_api_key.
+                 stored as blob-only (encrypted key only) in ~/.pinecone_api_key.
         Linux/macOS: plaintext in ~/.pinecone_api_key with chmod 600.
 
         Args:
@@ -328,10 +328,10 @@ class SecureStorage:
             # Encrypt
             encrypted_data = _encrypt_with_entropy(api_key.encode('utf-8'), entropy_data)
 
-            # Write: [entropy prefix 32 bytes] + [DPAPI encrypted key]
+            # Write: blob-only (no embedded entropy — entropy lives in ~/.uspto_internal_auth_secret)
             if self.storage_file.exists():
                 self.storage_file.unlink()
-            self.storage_file.write_bytes(entropy_data + encrypted_data)
+            self.storage_file.write_bytes(encrypted_data)
             os.chmod(self.storage_file, 0o600)
 
             logger.info(f"API key stored securely at {self.storage_file}")
@@ -353,7 +353,7 @@ class SecureStorage:
         Retrieve API key from secure storage.
 
         Priority:
-          Windows: ~/.pinecone_api_key (embedded-entropy format) → PINECONE_API_KEY env → PINECONE_ASSISTANT_API_KEY env
+          Windows: ~/.pinecone_api_key (blob-only, legacy fallback) → PINECONE_API_KEY env → PINECONE_ASSISTANT_API_KEY env
           Linux:   ~/.pinecone_api_key (plaintext) → PINECONE_API_KEY env → PINECONE_ASSISTANT_API_KEY env
 
         Returns:
@@ -372,18 +372,33 @@ class SecureStorage:
                 return (os.environ.get("PINECONE_API_KEY") or
                         os.environ.get("PINECONE_ASSISTANT_API_KEY"))
 
-            # Windows: embedded-entropy format
+            # Windows: try blob-only format first, then legacy embedded-entropy format
             if self.storage_file.exists():
                 try:
                     file_data = self.storage_file.read_bytes()
-                    if len(file_data) > 32:
-                        entropy = file_data[:32]
-                        encrypted = file_data[32:]
-                        decrypted = _decrypt_with_entropy(encrypted, entropy)
-                        api_key = decrypted.decode('utf-8')
-                        if api_key.startswith("pcsk_"):
-                            logger.debug(f"API key retrieved from {self.storage_file}")
-                            return api_key
+                    if len(file_data) > 0:
+                        # Format 1 (current): blob-only, shared entropy from ~/.uspto_internal_auth_secret
+                        try:
+                            shared_entropy = _get_or_create_internal_auth_entropy()
+                            decrypted = _decrypt_with_entropy(file_data, shared_entropy)
+                            api_key = decrypted.decode('utf-8')
+                            if api_key.startswith("pcsk_"):
+                                logger.debug(f"API key retrieved from {self.storage_file}")
+                                return api_key
+                        except Exception:
+                            pass
+                        # Format 2 (legacy): [entropy32 | DPAPI blob]
+                        if len(file_data) > 32:
+                            try:
+                                entropy = file_data[:32]
+                                encrypted = file_data[32:]
+                                decrypted = _decrypt_with_entropy(encrypted, entropy)
+                                api_key = decrypted.decode('utf-8')
+                                if api_key.startswith("pcsk_"):
+                                    logger.debug(f"API key retrieved (legacy format) from {self.storage_file}")
+                                    return api_key
+                            except Exception:
+                                pass
                 except Exception as e:
                     logger.debug(f"Could not decrypt {self.storage_file}: {e}")
 
@@ -482,7 +497,7 @@ def get_secure_api_key() -> Optional[str]:
 
     Priority:
     1. Windows Credential Manager (target: pinecone_API_KEY)
-    2. DPAPI file ~/.pinecone_api_key (embedded-entropy format)
+    2. DPAPI file ~/.pinecone_api_key (blob-only format, shared entropy)
     3. Env var PINECONE_API_KEY
     4. Env var PINECONE_ASSISTANT_API_KEY (legacy fallback)
 
